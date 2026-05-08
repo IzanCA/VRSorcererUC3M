@@ -127,5 +127,6 @@ public class SaveInformation : MonoBehaviour
     void OnApplicationQuit()
     {
         Save();
+        
     }
 }
