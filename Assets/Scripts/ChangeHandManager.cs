@@ -32,8 +32,13 @@ public class ChangeHandManager : MonoBehaviour
     {
         xRHandTrackingEventsRight.gameObject.SetActive(right);
         xRHandTrackingEventsLeft.gameObject.SetActive(left);
-        placeObjectAtHandJointRight.SetActive(right);
-        placeObjectAtHandJointLeft.SetActive(left);
+
+        if(placeObjectAtHandJointLeft != null && placeObjectAtHandJointRight != null)
+        {
+            placeObjectAtHandJointRight.SetActive(right);
+            placeObjectAtHandJointLeft.SetActive(left);
+        }
+
         StaticHandsDetectorsRight.SetActive(right);
         StaticHandsDetectorsLeft.SetActive(left);
         HandsEvaluatorsRight.SetActive(right);
