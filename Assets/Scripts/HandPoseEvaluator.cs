@@ -21,7 +21,8 @@ public class HandPoseEvaluator : MonoBehaviour
 
 
     [SerializeField] private TextMeshProUGUI similarityText;
-    [SerializeField] private Slider thresholdSlider;
+    [SerializeField] public Slider thresholdSlider;
+    [SerializeField] private bool sliderIsThreshold = true;
 
     void OnEnable() => handTrackingEvents.jointsUpdated.AddListener(OnJointsUpdated);
     void OnDisable() => handTrackingEvents.jointsUpdated.RemoveListener(OnJointsUpdated);
@@ -32,7 +33,6 @@ public class HandPoseEvaluator : MonoBehaviour
         evaluator = this;
         slider.minValue = 0f;
         slider.maxValue = 1f;
-        slider.interactable = false;
     }
 
     void Update()
@@ -41,7 +41,10 @@ public class HandPoseEvaluator : MonoBehaviour
         similarityText.text = $"{(evaluator.similarity * 100f):F1}%";
         var fill = slider.fillRect.GetComponent<Image>();
         fill.color = Color.Lerp(Color.red, Color.green, evaluator.similarity);
-        similarityPrecision = thresholdSlider.value;
+        if (sliderIsThreshold)
+        {
+            similarityPrecision = thresholdSlider.value;
+        }
     }
 
     void OnJointsUpdated(XRHandJointsUpdatedEventArgs eventArgs)

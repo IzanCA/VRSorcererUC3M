@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Hands;
 
 public class GrabObjectsWithHands : MonoBehaviour
@@ -9,6 +10,8 @@ public class GrabObjectsWithHands : MonoBehaviour
     [SerializeField] private Handedness handedness = Handedness.Right;
     [SerializeField] private XRHandJointID grabJoint = XRHandJointID.MiddleProximal;
     [SerializeField] private float grabColliderRadius = 0.08f;
+    [SerializeField] private float jointForce = 800f;
+    [SerializeField] private float jointDamping = 50f;
 
     private XRHandSubsystem handSubsystem;
     private GameObject grabColliderObject;
@@ -16,10 +19,12 @@ public class GrabObjectsWithHands : MonoBehaviour
 
     private bool isNearObject = false;
     private bool isGrabbing = false;
+    private bool isGrabbingJointed = false;
     private Collider actualObject;
 
     [SerializeField] private HandPoseEvaluator handPoseEvaluator;
-    [SerializeField] private float similarityValue;
+    [SerializeField] private Slider sliderRadius;
+    private float similarityValue;
 
     void OnEnable() => StartCoroutine(WaitForHandSubsystem());
 
@@ -73,66 +78,87 @@ public class GrabObjectsWithHands : MonoBehaviour
         if (joint.TryGetPose(out Pose pose))
             grabColliderObject.transform.SetPositionAndRotation(pose.position, pose.rotation);
 
-        // Si está agarrando, fuerza la posición del objeto a la mano cada frame
-        // independientemente de lo que pase con el trigger
+        if (sliderRadius != null)
+            grabCollider.radius = sliderRadius.value / 10f;
+
+        // Si el objeto fue destruido mientras lo agarrábamos, resetea todo
+        if (isGrabbing && actualObject == null)
+        {
+            isGrabbing = false;
+            isNearObject = false;
+            isGrabbingJointed = false;
+        }
 
         CalculateIsGrabing();
 
-        
-        if (isGrabbing && actualObject != null)
+        // Objeto normal — lo movemos con la mano
+        if (isGrabbing && !isGrabbingJointed && actualObject != null)
         {
             actualObject.transform.position = grabColliderObject.transform.position;
             actualObject.transform.rotation = grabColliderObject.transform.rotation;
         }
-    }
 
+        // Puerta/cajón — PD controller con amortiguación
+        if (isGrabbing && isGrabbingJointed && actualObject != null)
+        {
+            var rb = actualObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 positionError = grabColliderObject.transform.position - actualObject.transform.position;
+                Vector3 velocityError = -rb.linearVelocity;
 
-    private void CalculateIsGrabing()
-    {
-        if(handPoseEvaluator.similarity >= similarityValue)
-        {
-            isGrabbing = true;
-        }else
-        {
-            isGrabbing = false;
+                Vector3 force = (positionError * jointForce) + (velocityError * jointDamping);
+                rb.AddForce(force, ForceMode.Force);
+            }
         }
     }
 
-    // public void Grab()
-    // {
-    //     if (!isNearObject || actualObject == null) return;
+    private void CalculateIsGrabing()
+    {
+        similarityValue = handPoseEvaluator.thresholdSlider.value;
 
-    //     isGrabbing = true;
-    //     actualObject.transform.SetParent(grabColliderObject.transform);
-    //     actualObject.GetComponent<Rigidbody>().isKinematic = true;
-    //     Debug.Log("Grabbed: " + actualObject.name);
-    // }
+        bool wasGrabbing = isGrabbing;
+        bool shouldGrab = isNearObject && actualObject != null && handPoseEvaluator.similarity >= similarityValue;
 
-    // // Solo suelta cuando el gesto de agarre termina explícitamente
-    // public void Release()
-    // {
-    //     if (!isGrabbing || actualObject == null) return;
+        if (!wasGrabbing && shouldGrab && actualObject != null)
+        {
+            isGrabbingJointed = actualObject.CompareTag("JointObject");
+            isGrabbing = true;
 
-    //     isGrabbing = false;
-    //     actualObject.transform.SetParent(null);
-    //     actualObject.GetComponent<Rigidbody>().isKinematic = false;
-    //     actualObject = null;
-    //     Debug.Log("Released");
-    // }
+            if (!isGrabbingJointed)
+            {
+                actualObject.transform.SetParent(grabColliderObject.transform);
+                actualObject.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        }
+        else if (wasGrabbing && !shouldGrab && actualObject != null)
+        {
+            isGrabbing = false;
+            isNearObject = false;
+
+            if (!isGrabbingJointed)
+            {
+                var rb = actualObject.GetComponent<Rigidbody>();
+                actualObject.transform.SetParent(null);
+                rb.isKinematic = false;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
+            isGrabbingJointed = false;
+            actualObject = null;
+        }
+    }
 
     public void OnObjectEnter(Collider other)
     {
-        // Solo actualiza el objeto cercano si no estamos agarrando ya algo
         if (isGrabbing) return;
         isNearObject = true;
         actualObject = other;
-        Debug.Log("Near: " + other.name);
     }
 
     public void OnObjectExit(Collider other)
     {
-        // NUNCA sueltes el objeto si estás agarrando
-        // El trigger exit se ignora completamente durante el agarre
         if (isGrabbing) return;
         if (actualObject == other)
         {

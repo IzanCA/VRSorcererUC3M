@@ -6,14 +6,17 @@ TagManager:
   tags:
   - ObjectsAtJoints
   - GrabObject
+  - Hamburguer
+  - HotDog
+  - JointObject
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - GrabObject
   - Water
   - UI
-  - 
+  - GrabDetector
   - 
   - 
   - 

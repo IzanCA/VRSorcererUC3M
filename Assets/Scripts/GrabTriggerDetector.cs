@@ -12,13 +12,13 @@ public class GrabTriggerDetector : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("GrabObject"))
+        if (other.CompareTag("GrabObject") || other.CompareTag("JointObject"))
             grabManager.OnObjectEnter(other);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("GrabObject"))
+        if (other.CompareTag("GrabObject") || other.CompareTag("JointObject"))
             grabManager.OnObjectExit(other);
     }
 }
