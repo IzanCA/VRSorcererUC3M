@@ -2175,6 +2175,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 724884537364020505, guid: a49b58bf38ff0e54882b5b2201c2e87a, type: 3}
+      propertyPath: 'sceneNames.Array.data[4]'
+      value: HandCaptureSelf
+      objectReference: {fileID: 0}
     - target: {fileID: 1527612843852059298, guid: a49b58bf38ff0e54882b5b2201c2e87a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

@@ -5281,7 +5281,7 @@ MonoBehaviour:
   - HandsGrabScene
   - DoorsAndDrawers
   - XRCanvasUI
-  - HandCapture
+  - HandCaptureSelf
 --- !u!1 &361113267208788946
 GameObject:
   m_ObjectHideFlags: 0
