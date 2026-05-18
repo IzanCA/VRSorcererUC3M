@@ -21,6 +21,8 @@ public class HandPoseEvaluator : MonoBehaviour
 
 
     [SerializeField] private TextMeshProUGUI similarityText;
+
+    //Porcentaje de agarre que se muestra en la UI
     [SerializeField] public Slider thresholdSlider;
     [SerializeField] private bool sliderIsThreshold = true;
 
@@ -105,5 +107,10 @@ public class HandPoseEvaluator : MonoBehaviour
         }
 
         similarity = totalTargets > 0 ? totalSimilarity / totalTargets : 0f;
+    }
+
+    public void CalibrateSimilarity()
+    {
+        thresholdSlider.value = evaluator.similarity;
     }
 }
