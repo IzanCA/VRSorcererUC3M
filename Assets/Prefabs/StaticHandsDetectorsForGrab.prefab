@@ -107,8 +107,14 @@ MonoBehaviour:
   handedness: 2
   grabJoint: 13
   grabColliderRadius: 0.1
+  followSpeed: 35
+  rotationSpeed: 20
+  maxVelocity: 12
   jointForce: 800
   jointDamping: 50
+  ignoredLayers:
+    serializedVersion: 2
+    m_Bits: 1
   handPoseEvaluator: {fileID: 0}
   sliderRadius: {fileID: 0}
 --- !u!1 &3208248493289263501
@@ -251,7 +257,13 @@ MonoBehaviour:
   handedness: 1
   grabJoint: 13
   grabColliderRadius: 0.1
+  followSpeed: 35
+  rotationSpeed: 20
+  maxVelocity: 12
   jointForce: 800
   jointDamping: 50
+  ignoredLayers:
+    serializedVersion: 2
+    m_Bits: 1
   handPoseEvaluator: {fileID: 0}
   sliderRadius: {fileID: 0}
