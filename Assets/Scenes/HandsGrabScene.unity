@@ -6469,6 +6469,10 @@ PrefabInstance:
       propertyPath: handPoseEvaluator
       value: 
       objectReference: {fileID: 2365318226827563037}
+    - target: {fileID: 100915785095221803, guid: f386a5a2f0e70d340949c1843fb472e1, type: 3}
+      propertyPath: ignoredLayers.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1498767740123871736, guid: f386a5a2f0e70d340949c1843fb472e1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -32.48697
@@ -6517,6 +6521,10 @@ PrefabInstance:
       propertyPath: handPoseEvaluator
       value: 
       objectReference: {fileID: 1307026064693650438}
+    - target: {fileID: 2560895161148556406, guid: f386a5a2f0e70d340949c1843fb472e1, type: 3}
+      propertyPath: ignoredLayers.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3101637477070984914, guid: f386a5a2f0e70d340949c1843fb472e1, type: 3}
       propertyPath: m_Background
       value: 
@@ -6914,6 +6922,10 @@ PrefabInstance:
     - target: {fileID: 4639440430596907503, guid: 889a943f0631f3244b9cd7c283a4640d, type: 3}
       propertyPath: m_Name
       value: XR Origin (XR Rig)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5941729784553716398, guid: 889a943f0631f3244b9cd7c283a4640d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
