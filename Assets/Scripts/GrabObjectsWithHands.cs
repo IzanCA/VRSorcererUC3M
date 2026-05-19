@@ -20,6 +20,7 @@ public class GrabObjectsWithHands : MonoBehaviour
 
     private XRHandSubsystem handSubsystem;
     private GameObject grabColliderObject;
+    private GameObject pushCollider;
     private SphereCollider grabCollider;
 
     private bool isNearObject = false;
@@ -81,6 +82,23 @@ public class GrabObjectsWithHands : MonoBehaviour
         GameObject handRoot = GameObject.Find(handName);
         if (handRoot != null)
             grabColliderObject.transform.position = handRoot.transform.position;
+
+
+        pushCollider = new GameObject("PushCollider_" + handedness);
+        pushCollider = GameObject.Find("PushCollider_" + handedness);
+        pushCollider.AddComponent<BoxCollider>();
+        pushCollider.GetComponent<BoxCollider>().size = new Vector3(0.08f, 0.03f, 0.08f);
+        pushCollider.GetComponent<BoxCollider>().isTrigger = false;
+
+        Rigidbody rb2 = pushCollider.AddComponent<Rigidbody>();
+        rb2.isKinematic = true;
+        rb2.useGravity = false;
+
+        
+        if (handRoot != null)
+            pushCollider.transform.position = handRoot.transform.position;
+
+
     }
 
     private void Update()
@@ -93,6 +111,7 @@ public class GrabObjectsWithHands : MonoBehaviour
         XRHandJoint joint = hand.GetJoint(grabJoint);
         if (joint.TryGetPose(out Pose pose))
             grabColliderObject.transform.SetPositionAndRotation(pose.position, pose.rotation);
+            pushCollider.transform.SetPositionAndRotation(pose.position, pose.rotation);
 
         if (sliderRadius != null)
             grabCollider.radius = sliderRadius.value / 10f;

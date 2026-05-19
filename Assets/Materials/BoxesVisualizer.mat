@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unity_Hand_Medium
+  m_Name: BoxesVisualizer
   m_Shader: {fileID: -6465566751694194690, guid: 89a6790c28795dd4987bb267c3d05338, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
